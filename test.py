@@ -16,13 +16,12 @@ if __name__ == '__main__':
         # cmd tensorboard --logdir runs/train/ (default)
         "tensorboard": True,
         # "log_dir": 'runs/train/',
-        "model_name": 'yolov8s_hg',
-        # "device": 'mps'
+        "model_name": 'yolov8s_hg'
     }
 
     # train model, baseline: v8n | v8s | v8m | v8m | v8x
-    model = ModelA(model='yolov8s.pt', data_cfg=data_cfg, device='mps')
-    model, result = model.train(project_dir=os.path.join(os.getcwd(), 'data_models', 'my_trained_model'),
+    model = ModelA(model='yolov8s.pt', data_cfg=data_cfg, device='cpu')
+    model, result = model.train(project_dir=os.path.join(os.getcwd(), 'data_models', 'my_trained_modelsj', 'j'),
                         conf=train_args)
     print(result)
 # Customize validation settings

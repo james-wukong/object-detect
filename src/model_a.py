@@ -37,22 +37,22 @@ class ModelA(YoloModelInterface):
             "freeze": conf.get('freeze', 10),  # the first N layers
             "batch": conf.get('batch', -1),
             "patience": conf.get('patience', 5),
-            "epochs": conf.get('epochs', 5),
+            "epochs": conf.get('epochs', 3),
             # cmd tensorboard --logdir runs/train/ (default)
             # "tensorboard": conf.get('tensorboard', True),
             # "log_dir": 'runs/train/',
             "project": project_dir,
-            "name": conf.get('model_name', 'yolov8n_hg'),
+            "name": conf.get('model_name', 'yolov8n_j_hg'),
             "device": self.device if self.device else 'cpu'
         }
 
         # train model, baseline: v8n | v8s | v8m | v8m | v8x
-        model = YOLO(f'data_models/pre_trained_models/{self.model}')
+        model = YOLO(f'data_models/pre_trained_models/{self.model}', task='detect')
         result = model.train(data=self.data_cfg,
                              save=True,
                              amp=True,  # Enables Automatic Mixed Precision (AMP) training
                              exist_ok=True,
-                             pretrained=True,
+                             pretrained=True, # Determines whether to start training from a pretrained model.
                              verbose=True,
                              **train_args)
 
