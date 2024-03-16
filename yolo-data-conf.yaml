@@ -1,0 +1,11 @@
+# path to dataset
+path: /Users/james/Documents/Githubs/object-detect/data_models
+train: images/train
+val: images/val
+test: images/test
+
+# number of classes
+nc: 2
+
+# class names
+names: ['hat', 'glass']
