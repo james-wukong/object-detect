@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     # train model, baseline: v8n | v8s | v8m | v8m | v8x
     model = ModelA(model='yolov8s.pt', data_cfg=data_cfg, device='cpu')
-    model, result = model.train(project_dir=os.path.join(os.getcwd(), 'data_models', 'my_trained_modelsj', 'j'),
+    model, result = model.train(project_dir=os.path.join(os.getcwd(), 'data_models', 'my_trained_models', 'j'),
                         conf=train_args)
     print(result)
 # Customize validation settings
