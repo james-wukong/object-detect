@@ -5,7 +5,10 @@ val: images/val
 test: images/test
 
 # number of classes
-nc: 2
+#nc: 2
 
 # class names
-names: ['hat', 'glass']
+#names: ['hat', 'glass']
+names:
+  0: hat
+  1: glass
