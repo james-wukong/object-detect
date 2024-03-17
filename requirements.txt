@@ -8,6 +8,7 @@ scikit-learn
 pandas
 pandas-datareader
 numpy
+pandas
 pyyaml
 pillow
 IPython
