@@ -2,7 +2,7 @@ task: detect
 mode: train
 model: data_models/pre_trained_models/yolov8s.pt
 data: yolo-data-conf.yaml
-epochs: 3
+epochs: 1
 time: null
 patience: 5
 batch: -1

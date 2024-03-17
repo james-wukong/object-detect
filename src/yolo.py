@@ -24,7 +24,7 @@ class YoloModelInterface(ABC):
         pass
 
     @abstractmethod
-    def export(self, model: YOLO, format: str = '-') -> Any:
+    def export(self, model: YOLO, format: str = '-') -> None:
         pass
 
     @abstractmethod
@@ -32,5 +32,5 @@ class YoloModelInterface(ABC):
         pass
 
     @abstractmethod
-    def benchmark(self, **kwargs) -> pd.DataFrame:
+    def benchmark(self, **kwargs) -> None:
         pass

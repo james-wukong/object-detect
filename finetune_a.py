@@ -4,50 +4,37 @@ from src.model_a import ModelA
 
 if __name__ == '__main__':
     data_cfg = 'yolo-data-conf.yaml'
+    base_model_name = 'yolov8s'
+    new_model_name = 'yolov8s_hg'
+    owner = 'j'
+    device = 'cpu'
     # m1/m2 training, for gpu: [0]
     train_args = {
         # Options include SGD, Adam, AdamW, NAdam, RAdam, RMSProp etc., or auto
-        # "optimizer": 'Adam',
+        "optimizer": 'Adam',
         "learning_rate": 1e-4,
-        # "momentum": 0.938,
+        "momentum": 0.938,
         "freeze": 10,  # the first N layers
-        # "batch": -1,
-        # "patience": 5,
-        # "epochs": 5,
+        "batch": -1,
+        "patience": 5,
+        "epochs": 1,
         # cmd tensorboard --logdir runs/train/ (default)
         "tensorboard": True,
         # "log_dir": 'runs/train/',
-        "model_name": 'yolov8s_hg'
+        "model_name": new_model_name
     }
 
     # train model, baseline: v8n | v8s | v8m | v8m | v8x
-    model = ModelA(model='yolov8s.pt', data_cfg=data_cfg, device='cpu')
-    yolo, result = model.train(project_dir=os.path.join(os.getcwd(), 'data_models', 'my_trained_models', 'j'),
+    model = ModelA(model=f'{base_model_name}.pt', data_cfg=data_cfg, device=device)
+    yolo, result = model.train(project_dir=os.path.join(os.getcwd(), 'data_models', 'my_trained_models', owner),
                                conf=train_args)
-    print('---------printing the result from training-------------')
-    print(result)
 
     metrics = model.val(yolo)
-    print('---------printing the metrics from training-------------')
     print(metrics.box.map)
 
-    exp_model = model.export(model)
-    print('---------printing the exp model from training-------------')
-    print(exp_model)
-# Customize validation settings
-# validation_results = model.val(data=data_cfg,
-#                                imgsz=640,
-#                                batch=16,
-#                                conf=0.25,
-#                                iou=0.6,
-#                                device='0')
-# print(validation_results)
-#
-#
-# # Resume training
-# model = YOLO('path/to/last.pt')
-# results = model.train(resume=True)
-#
-#
-# # Benchmark on GPU, such as "cpu", "cuda:0"
-# benchmark(model='yolov8n.pt', data='coco8.yaml', imgsz=640, half=False, device=0)
+    # model.benchmark(model=os.path.join('data_models',
+    #                                         'my_trained_models',
+    #                                         owner, new_model_name, 'weights',
+    #                                         'best.pt'))
+
+    model.export(yolo)

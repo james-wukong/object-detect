@@ -1,5 +1,4 @@
-fastapi~=0.110.0
-uvicorn
+flask
 pydantic
 yapf
 pytest
@@ -14,6 +13,5 @@ IPython
 matplotlib
 tqdm
 ipykernel
-networkx
 tensorflow
-ultralytics~=8.1.16
+ultralytics
