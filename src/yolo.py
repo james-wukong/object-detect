@@ -28,7 +28,11 @@ class YoloModelInterface(ABC):
         pass
 
     @abstractmethod
-    def track(self):
+    def track_video(self):
+        pass
+
+    @abstractmethod
+    def track_webcam(self):
         pass
 
     @abstractmethod
