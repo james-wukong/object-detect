@@ -102,12 +102,12 @@ class ModelA(YoloModelInterface):
     def export(self, model: YOLO, fmt: str = 'onnx') -> None:
         model.export(format=fmt)
 
-    def track_video(self):
+    def track_video(self, model_name: str = 'yolov8n.pt',
+                    video_path: str = ''):
         # Load the YOLOv8 model
-        model = YOLO('yolov8n.pt')
+        model = YOLO(model_name)
 
         # Open the video file
-        video_path = "path/to/video.mp4"
         cap = cv2.VideoCapture(video_path)
 
         # Loop through the video frames
@@ -123,13 +123,12 @@ class ModelA(YoloModelInterface):
                 annotated_frame = results[0].plot()
 
                 # Display the annotated frame
-                cv2.imshow("YOLOv8 Tracking", annotated_frame)
+                cv2.imshow("YOLOv8 Custom Tracking", annotated_frame)
 
                 # Break the loop if 'q' is pressed
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
             else:
-                # Break the loop if the end of the video is reached
                 break
 
         # Release the video capture object and close the display window
