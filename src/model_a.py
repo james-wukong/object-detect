@@ -91,7 +91,7 @@ class ModelA(YoloModelInterface):
 
         return metrics
 
-    def predict(self, model: YOLO, img: str, conf: float = 0.5) -> List:
+    def predict(self, model: YOLO, img: str, conf: float = 0.65) -> List:
         # Run inference on 'bus.jpg' with arguments
         result = model.predict(source=img,
                                save=True,
