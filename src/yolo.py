@@ -24,13 +24,17 @@ class YoloModelInterface(ABC):
         pass
 
     @abstractmethod
-    def export(self, model: YOLO, format: str = '-') -> Any:
+    def export(self, model: YOLO, format: str = '-') -> None:
         pass
 
     @abstractmethod
-    def track(self):
+    def track_video(self):
         pass
 
     @abstractmethod
-    def benchmark(self, **kwargs) -> pd.DataFrame:
+    def track_webcam(self):
+        pass
+
+    @abstractmethod
+    def benchmark(self, **kwargs) -> None:
         pass
