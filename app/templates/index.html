@@ -22,9 +22,14 @@
             <button type="submit">Submit</button>
         </form>
     </div>
-    {% if test %}
-        {{ test }}
-    {% else %}
-        not found
+    {% if gen_image %}
+    <div class="content">
+        <img src="{{ url_for('static', filename='images/gen/' + gen_image) }}" alt="Generated Image">
+    </div>
+    {% endif %}
+    {% if pred_image %}
+    <div class="content">
+        <img src="{{ url_for('static', filename='images/pred/' + pred_image) }}" alt="Predicted Image">
+    </div>
     {% endif %}
 {% endblock %}

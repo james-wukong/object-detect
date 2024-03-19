@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, request, flash
+from flask import render_template, request, flash, url_for
 from ultralytics import YOLO
 
 from src.model_a import ModelA
@@ -18,7 +18,8 @@ IMAGE_BASE_PATH = os.path.join(os.getcwd(),
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    models = {'yolov8n': os.path.join(MODEL_BASE_PATH, '1'),
+    print('-----------')
+    models = {'yolov8n': os.path.join(MODEL_BASE_PATH, 'j/yolov8m_hat_glass/weights/best.pt'),
               'yolov8s': os.path.join(MODEL_BASE_PATH, '1'),
               'yolov8m': os.path.join(MODEL_BASE_PATH, '1'),
               'yolov8x': os.path.join(MODEL_BASE_PATH, '1'),
@@ -33,15 +34,17 @@ def index():
         elif not content:
             flash('Content is required!')
         else:
-            gen_image = ModelA.generate_image(content,
-                                              img_path='')
+            # gen_image = ModelA.generate_image(content,
+            #                                   img_path='')
+            gen_image = 'app/static/images/gen/1.jpeg'
             yolo = YOLO(os.path.join(model), 'detect')
-            model = ModelA.predict(yolo, img='', conf=0.66)
+            results, dst_img = ModelA.predict(yolo, img=gen_image, conf=0.66)
+
             return render_template("index.html",
-                                   gen_image=gen_image,
-                                   pred_image='',
-                                   test=model,
-                                   models=models)
+                                   gen_image=gen_image.split('/')[-1],
+                                   pred_image=dst_img.split('/')[-1],
+                                   models=models,
+                                   results=results)
 
     return render_template('index.html', models=models, test=os.getcwd())
 
