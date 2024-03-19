@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import functools
 import os
 import time
 import random
@@ -8,7 +7,6 @@ import string
 from typing import Any, List
 
 import cv2
-import pandas as pd
 from ultralytics import YOLO
 from ultralytics.utils.benchmarks import benchmark
 import torch
@@ -123,12 +121,12 @@ class ModelA(YoloModelInterface):
         # Load the YOLOv8 model
         model = YOLO(model_name)
 
-        # Open the video file
+        # Open the videos file
         cap = cv2.VideoCapture(video_path)
 
-        # Loop through the video frames
+        # Loop through the videos frames
         while cap.isOpened():
-            # Read a frame from the video
+            # Read a frame from the videos
             success, frame = cap.read()
 
             if success:
@@ -147,7 +145,7 @@ class ModelA(YoloModelInterface):
             else:
                 break
 
-        # Release the video capture object and close the display window
+        # Release the videos capture object and close the display window
         cap.release()
         cv2.destroyAllWindows()
 
