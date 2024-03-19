@@ -3,6 +3,28 @@
 {% block content %}
     <span class="title"><h1>{% block title %} The Home Page of FlaskApp {% endblock %}</h1></span>
     <div class="content">
-        <h2>This is the main video blueprint</h2>
+        <h2>Video Streaming</h2>
+        <select id="model_dl" name="model_dl"  onchange="handleChange()">>
+            {% for model, path in models.items() %}
+            <option value="{{path}}">{{model}}</option>
+            {% endfor %}
+        </select>
+        <img id="videoPlayer" src="{{ url_for('main.video_feed') }}"  width="60%">
     </div>
+    <p id="selectedOption">Selected Option: </p>
+
+    <script>
+        // Function to handle onchange event
+        function handleChange() {
+            // Get the selected value from the dropdown
+            var selectedValue = document.getElementById("model_dl").value;
+
+            // Update the paragraph text to display the selected option
+            document.getElementById("selectedOption").innerText = "Selected Option: " + selectedValue;
+
+            var videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = "{{ url_for('main.video_feed', model_id=selectedValue) }}?" + new Date().getTime(); // Add timestamp to prevent caching
+        }
+    </script>
 {% endblock %}
+

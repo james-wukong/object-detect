@@ -92,11 +92,3 @@ app.add_url_rule(
     "/uploads/<name>", endpoint="load", build_only=True
 )
 
-
-def predict_image(model_name: str = 'yolov8n.pt',
-                  img_path: str = '') -> List:
-
-    yolo = YOLO(model_name)
-    image = ModelA.predict(yolo, img_path)
-
-    return image
