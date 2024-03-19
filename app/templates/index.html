@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <span class="title"><h1>{% block title %} The Home Page of FlaskApp {% endblock %}</h1></span>
+    <div class="content">
+        <h1>Describe your idea</h1>
+        <br />
+        <form method="post">
+            <label for="content">Message Content</label>
+            <br>
+            <select id="model" name="model">
+                {% for model, path in models.items() %}
+                <option value="{{path}}">{{model}}</option>
+                {% endfor %}
+            </select>
+            <textarea name="content"
+                      placeholder="what's in your mind..."
+                      rows="15"
+                      cols="60"
+                      >{{ request.form['content'] }}</textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    {% if test %}
+        {{ test }}
+    {% else %}
+        not found
+    {% endif %}
+{% endblock %}

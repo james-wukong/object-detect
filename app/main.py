@@ -7,8 +7,8 @@ from ultralytics import YOLO
 from flask import Flask, flash, request, redirect, Response, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from enum import Enum, auto
-sys.path.append('/.../object-detect/src')
 
+sys.path.append(os.getcwd())
 from src.model_a import ModelA
 
 
