@@ -1,7 +1,17 @@
+from __future__ import annotations
 import os
+import sys
+from typing import List
+
+from ultralytics import YOLO
 from flask import Flask, flash, request, redirect, Response, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from enum import Enum, auto
+sys.path.append('/.../object-detect/src')
+
+from src.model_a import ModelA
+
+
 import cv2
 IMAGES = {'png', 'jpg', 'jpeg'}
 VIDEOES = {"mp4", "ogv", "wmv", "mov"}
@@ -81,3 +91,12 @@ def stream():
 app.add_url_rule(
     "/uploads/<name>", endpoint="load", build_only=True
 )
+
+
+def predict_image(model_name: str = 'yolov8n.pt',
+                  img_path: str = '') -> List:
+
+    yolo = YOLO(model_name)
+    image = ModelA.predict(yolo, img_path)
+
+    return image
