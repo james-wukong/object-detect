@@ -1,6 +1,6 @@
 flask
 Werkzeug
-opencv
+opencv-python
 yapf
 pytest
 pyyaml
@@ -14,7 +14,7 @@ IPython
 matplotlib
 tqdm
 ipykernel
-pytorch
+torch
 torchvision
 ultralytics
 transformers
