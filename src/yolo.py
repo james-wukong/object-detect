@@ -19,6 +19,7 @@ class YoloModelInterface(ABC):
     def val(self, model: YOLO) -> dict:
         pass
 
+    @staticmethod
     @abstractmethod
     def predict(self, model: YOLO, img: str, conf: float = 0.5) -> List:
         pass

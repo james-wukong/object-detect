@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+import functools
+import os
+import time
+import random
+import string
 from typing import Any, List
 
 import cv2
 import pandas as pd
 from ultralytics import YOLO
 from ultralytics.utils.benchmarks import benchmark
+import torch
+from diffusers import StableDiffusionPipeline
 
 from src.yolo import YoloModelInterface
 
@@ -91,12 +98,15 @@ class ModelA(YoloModelInterface):
 
         return metrics
 
-    @classmethod
-    def predict(cls, model: YOLO, img: str, conf: float = 0.65) -> List:
+    @staticmethod
+    def predict(model: YOLO, img: str, conf: float = 0.65,
+                device: str = 'cpu') -> List:
+
         # Run inference on 'bus.jpg' with arguments
-        result = model.predict(source=img,
-                               save=True,
-                               conf=conf)
+        result = model(source=img,
+                       save=True,
+                       device=device,
+                       conf=conf)
 
         return result
 
@@ -149,3 +159,29 @@ class ModelA(YoloModelInterface):
         benchmark(data=self.data_cfg,
                   device=self.device,
                   **bm_args)
+
+    @staticmethod
+    def generate_image(prompt: str,
+                       model_id: str = 'runwayml/stable-diffusion-v1-5',
+                       device: str = 'cuda',
+                       img_path: str = '') -> str:
+        """
+        generate image with stable diffusion model
+        :param prompt: prompt text
+        :param model_id: model id
+        :param device: cpu or cuda
+        :param img_path: path to save image
+        :return: str, image path
+        """
+        pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float32)
+        pipe = pipe.to(device)
+
+        image = pipe(prompt, num_inference_steps=15).images[0]
+        rand_str = ''.join(random.choices(string.ascii_uppercase +
+                                          string.digits, k=5))
+        timestamp = str(round(time.time() * 1000))
+        img_name = os.path.join(img_path, f'{rand_str}_{timestamp}.png')
+
+        image.save(img_name)
+
+        return img_name
