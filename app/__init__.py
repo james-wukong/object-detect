@@ -4,12 +4,8 @@ from config import Config
 
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static')
     app.config.from_object(config_class)
-    app.config.update(
-        TESTING=True,
-        SECRET_KEY='192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
-    )
 
     # Initialize Flask extensions here
 

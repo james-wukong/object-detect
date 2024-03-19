@@ -21,7 +21,7 @@ class YoloModelInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def predict(self, model: YOLO, img: str, conf: float = 0.5) -> List:
+    def predict(self, model: YOLO, img: str, conf: float = 0.5) -> tuple[List, str]:
         pass
 
     @abstractmethod

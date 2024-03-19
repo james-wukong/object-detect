@@ -100,15 +100,20 @@ class ModelA(YoloModelInterface):
 
     @staticmethod
     def predict(model: YOLO, img: str, conf: float = 0.65,
-                device: str = 'cpu') -> List:
+                device: str = 'cpu') -> tuple[List, str]:
 
         # Run inference on 'bus.jpg' with arguments
-        result = model(source=img,
-                       save=True,
+        results = model(source=img,
+                       save=False,
                        device=device,
                        conf=conf)
+        dst_img = img.split('/')
+        dst_img[-2] = 'pred'
+        dst_img = '/'.join(dst_img)
+        for r in results:
+            r.save(filename=dst_img)
 
-        return result
+        return results, dst_img
 
     def export(self, model: YOLO, fmt: str = 'onnx') -> None:
         model.export(format=fmt)
