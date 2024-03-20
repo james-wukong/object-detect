@@ -85,9 +85,11 @@ class ModelA(YoloModelInterface):
             "batch": excluded_dict.get('batch', 16),
         }
 
+        device = 'cuda:0' if self.device == 0 else self.device
+
         # Validate the model
         metrics = model.val(data=self.data_cfg,
-                            device=self.device,
+                            device=device,
                             **val_args)
         # metrics.box.map  # map50-95
         # metrics.box.map50  # map50
