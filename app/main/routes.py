@@ -33,7 +33,7 @@ def index():
             # model id: runwayml/stable-diffusion-v1-5
             gen_image = ModelA.generate_image(content,
                                               device=Config.SD_DEVICE,
-                                              model_id = 'runwayml/stable-diffusion-v1-5',
+                                              model_id='runwayml/stable-diffusion-v1-5',
                                               img_path=f'{Config.IMAGE_BASE_PATH}/gen/')
             # gen_image = 'app/static/images/gen/1.jpeg'
             yolo = YOLO(os.path.join(model), 'detect')
@@ -64,9 +64,10 @@ def video():
 
 @bp.route('/video_feed', methods=['GET'])
 @bp.route('/video_feed/<model_id>', methods=['GET'])
-def video_feed(model_id=None):
+def video_feed(model_id: str = None):
     video_path = Config.VIDEO_DEMO
     cap = cv2.VideoCapture(video_path)
+    model_id = '/'.join(model_id.split('-')) if model_id else None
 
     # Function to generate videos frames
     def generate_frames(mid):
@@ -76,6 +77,7 @@ def video_feed(model_id=None):
                 break
             # Run YOLOv8 inference on the frame
             mid = Config.MODELS['yolov8n'] if mid is None else mid
+            # mid = 'data_models/my_trained_models/j/yolov8m_hat_glass/weights/best.pt'
             model = YOLO(mid, 'detect')
             # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
             # Allows users to select between CPU, a specific GPU, or other compute devices
@@ -110,7 +112,9 @@ def webcam():
 
 @bp.route('/webcam_feed', methods=['GET'])
 @bp.route('/webcam_feed/<model_id>', methods=['GET'])
-def webcam_feed(model_id=None):
+def webcam_feed(model_id: str = None):
+    model_id = '/'.join(model_id.split('-')) if model_id else None
+
     # Function to generate videos frames
     def generate_frames(mid):
         camera = cv2.VideoCapture(0)  # Use 0 for default webcam

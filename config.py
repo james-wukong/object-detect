@@ -18,8 +18,7 @@ class Config:
     VIDEO_PATH = os.path.join(basedir, 'videos')
     IMAGE_PATH = os.path.join(basedir, 'image')
 
-    MODEL_BASE_PATH = os.path.join(os.getcwd(),
-                                   'data_models',
+    MODEL_BASE_PATH = os.path.join('data_models',
                                    'my_trained_models')
     IMAGE_BASE_PATH = os.path.join(os.getcwd(),
                                    'app', 'static'
