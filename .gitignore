@@ -2,7 +2,7 @@
 .DS_Store
 *.cache
 diffusion.ipynb
-data_models/my_trained_models/*
+data_models/my_trained_models/d/yolov8x_hat_glass_1
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
