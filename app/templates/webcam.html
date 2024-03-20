@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <span class="title"><h1>{% block title %} The Home Page of FlaskApp {% endblock %}</h1></span>
     <div class="content">
-        <h2>Webcam Streaming</h2>
-        <select id="model" name="model">
+        <h2>Webcam Streaming: </h2><h2 id="model_title"></h2>
+        <select id="model_dl" name="model_dl" onchange="handleChange()">
             {% for model, path in models.items() %}
             <option value="{{path}}">{{model}}</option>
             {% endfor %}
         </select>
-        <img src="{{ url_for('main.webcam_feed', model_id=model_id) }}"  width="100%">
+        <img id="webcamPlayer" src="{{ url_for('main.webcam_feed') }}"  width="100%">
     </div>
+    <script>
+        // Function to handle onchange event
+        function handleChange() {
+            // Get the selected value from the dropdown
+            var selectedValue = document.getElementById("model_dl").value;
+
+            model_id = selectedValue.split('/').join('-');
+            var webcamPlayer = document.getElementById('webcamPlayer');
+            var modelTitle = document.getElementById('model_title');
+            modelTitle.innerHTML = selectedValue
+            webcamPlayer.src = "{{ url_for('main.webcam_feed') }}/" + model_id + '?' + new Date().getTime();
+        }
+    </script>
 {% endblock %}
