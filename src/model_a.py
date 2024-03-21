@@ -20,7 +20,7 @@ class ModelA(YoloModelInterface):
     implement the abstract methods
     """
 
-    def __init__(self, model: str, data_cfg: str, device: Any):
+    def __init__(self, model: str, device: Any, data_cfg=None):
         """
         initialize the model with pretrained model name and data configure file
         :param model:
@@ -97,15 +97,17 @@ class ModelA(YoloModelInterface):
         return metrics
 
     @staticmethod
-    def predict(model: YOLO, img: str, conf: float = 0.65,
+    def predict(model: YOLO, img: Any, conf: float = 0.65,
                 device: str = 'cpu') -> tuple[List, str]:
-
         # Run inference on 'bus.jpg' with arguments
         results = model(source=img,
                        save=False,
                        device=device,
                        conf=conf)
-        dst_img = img.split('/')
+        if isinstance(img, list):
+            dst_img = img[0].split('/')
+        else:
+            dst_img = img.split('/')
         dst_img[-2] = 'pred'
         dst_img = '/'.join(dst_img)
         for r in results:

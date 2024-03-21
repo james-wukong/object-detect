@@ -43,7 +43,7 @@ def index():
             # for model execution.
             results, dst_img = ModelA.predict(yolo,
                                               img=gen_image,
-                                              conf=0.66,
+                                              conf=0.45,
                                               device=Config.DEVICE)
 
             return render_template("index.html",
@@ -83,7 +83,7 @@ def video_feed(model_id: str = None):
             # Allows users to select between CPU, a specific GPU, or other compute devices
             # for model execution.
             results = model(frame,
-                            conf=0.6,
+                            conf=0.35,
                             device=Config.DEVICE)
 
             # Visualize the results on the frame
@@ -96,7 +96,7 @@ def video_feed(model_id: str = None):
                    b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
         # Release capture device
-        # cap.release()
+        cap.release()
 
     # Return Response object with the generated frames
     return Response(stream_with_context(generate_frames(model_id)),
@@ -131,7 +131,7 @@ def webcam_feed(model_id: str = None):
                 # Allows users to select between CPU, a specific GPU, or other compute devices
                 # for model execution.
                 results = model(frame,
-                                conf=0.6,
+                                conf=0.45,
                                 device=Config.DEVICE)
 
                 # Visualize the results on the frame
