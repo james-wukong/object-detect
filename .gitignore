@@ -3,7 +3,6 @@
 *.cache
 diffusion.ipynb
 data_models/my_trained_models/d/yolov8x_hat_glass_1
-data_models/my_trained_models/j/yolov8s_hat_glass
 data_models/my_trained_models/j/yolov8m_hat_glass
 
 # Byte-compiled / optimized / DLL files
