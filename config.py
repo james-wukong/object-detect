@@ -23,10 +23,11 @@ class Config:
     IMAGE_BASE_PATH = os.path.join(os.getcwd(),
                                    'app', 'static'
                                           'images')
-    MODELS = {'yolov8n': os.path.join(MODEL_BASE_PATH, 'j/yolov8n_hat_glass/weights/best.pt'),
-              'yolov8s': os.path.join(MODEL_BASE_PATH, 'j/yolov8s_hat_glass/weights/best.pt'),
-              'yolov8m': os.path.join(MODEL_BASE_PATH, 'j/yolov8m_hat_glass/weights/best.pt'),
-              'yolov8l': os.path.join(MODEL_BASE_PATH, '1'),
-              'yolov8x': os.path.join(MODEL_BASE_PATH, '1')
+    MODELS = {'yolov8n': os.path.join(MODEL_BASE_PATH, 'j/yolov8n/weights/best.pt'),
+              'yolov8n_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8n_agmt/weights/best.pt'),
+              'yolov8s': os.path.join(MODEL_BASE_PATH, 'j/yolov8s/weights/best.pt'),
+              'yolov8s_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8s_agmt/weights/best.pt'),
+              'yolov8m': os.path.join(MODEL_BASE_PATH, 'j/yolov8m/weights/best.pt'),
+              'yolov8m_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8m_agmt/weights/best.pt'),
               }
     VIDEO_DEMO = 'app/static/videos/demo.mp4'

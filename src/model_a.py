@@ -54,7 +54,8 @@ class ModelA(YoloModelInterface):
             # "log_dir": 'runs/train/',
             "project": project_dir,
             "name": conf.get('model_name', 'yolov8n_j_hg'),
-            "device": self.device if self.device else 'cpu'
+            "device": self.device if self.device else 'cpu',
+            "augment": conf.get('augment', False),
         }
 
         # train model, baseline: v8n | v8s | v8m | v8m | v8x
