@@ -23,6 +23,11 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    {% if model %}
+    <div class="content">
+        <p>model selected: {{ model }}</p>
+    </div>
+    {% endif %}
     {% if gen_image %}
     <div class="content">
         <img src="{{ url_for('static', filename='images/gen/' + gen_image) }}" alt="Generated Image">

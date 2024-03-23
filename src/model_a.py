@@ -4,13 +4,16 @@ import os
 import time
 import random
 import string
+import requests
+import io
+from PIL import Image
 from typing import Any, List
 
 import cv2
 from ultralytics import YOLO
 from ultralytics.utils.benchmarks import benchmark
 import torch
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 from src.yolo import YoloModelInterface
 
@@ -167,8 +170,41 @@ class ModelA(YoloModelInterface):
                   **bm_args)
 
     @staticmethod
+    def generate_image_api(prompt: str,
+                           api_endpoint: str,
+                           model_id: str = 'stabilityai/stable-diffusion-2-1',
+                           img_path: str = '') -> str:
+        """
+        generate image with stable diffusion model
+        :param prompt: prompt text
+        :param model_id: model id
+        :param device: cpu or cuda
+        :param img_path: path to save image
+        :return: str, image path
+        """
+        API_TOKEN = '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'
+        headers = {"Authorization": f"Bearer {API_TOKEN}"}
+
+        def query(payload):
+            response = requests.post(api_endpoint + model_id, headers=headers, json=payload)
+            return response.content
+        image_bytes = query({
+            "inputs": prompt,
+        })
+        # You can access the image with PIL.Image for example
+        image = Image.open(io.BytesIO(image_bytes))
+        rand_str = ''.join(random.choices(string.ascii_uppercase +
+                                          string.digits, k=5))
+        timestamp = str(round(time.time() * 1000))
+        img_name = os.path.join(img_path, f'{rand_str}_{timestamp}.png')
+
+        image.save(img_name)
+
+        return img_name
+        
+    @staticmethod
     def generate_image(prompt: str,
-                       model_id: str = 'runwayml/stable-diffusion-v1-5',
+                       model_id: str = 'stabilityai/stable-diffusion-2-1',
                        device: str = 'cuda',
                        img_path: str = '') -> str:
         """
@@ -178,8 +214,11 @@ class ModelA(YoloModelInterface):
         :param device: cpu or cuda
         :param img_path: path to save image
         :return: str, image path
+        
         """
         pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float32)
+        pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+
         pipe = pipe.to(device)
 
         image = pipe(prompt, num_inference_steps=15).images[0]
