@@ -22,7 +22,7 @@ def index():
     :return:
     """
     if request.method == 'POST':
-        model = request.form.get('model')
+        model = request.form.get('model', None)
         content = request.form.get('content')
 
         if not model:
@@ -31,8 +31,8 @@ def index():
             flash('Content is required!')
         else:
             # model id: runwayml/stable-diffusion-v1-5
-            gen_image = ModelA.generate_image(content,
-                                              device=Config.SD_DEVICE,
+            gen_image = ModelA.generate_image_api(content,
+                                              api_endpoint=Config.ENDPOINT,
                                               model_id='runwayml/stable-diffusion-v1-5',
                                               img_path=f'{Config.IMAGE_BASE_PATH}/gen/')
             # gen_image = 'app/static/images/gen/1.jpeg'
@@ -50,7 +50,8 @@ def index():
                                    gen_image=gen_image.split('/')[-1],
                                    pred_image=dst_img.split('/')[-1],
                                    models=Config.MODELS,
-                                   results=results)
+                                   results=results, 
+                                   model=model)
 
     return render_template('index.html', models=Config.MODELS)
 
@@ -71,26 +72,31 @@ def video_feed(model_id: str = None):
 
     # Function to generate videos frames
     def generate_frames(mid):
+        idx = 0
+        # Run YOLOv8 inference on the frame
+        mid = Config.MODELS['yolov8n'] if mid is None else mid
+        # mid = 'data_models/my_trained_models/j/yolov8m_hat_glass/weights/best.pt'
+        model = YOLO(mid, 'detect')
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
                 break
-            # Run YOLOv8 inference on the frame
-            mid = Config.MODELS['yolov8n'] if mid is None else mid
-            # mid = 'data_models/my_trained_models/j/yolov8m_hat_glass/weights/best.pt'
-            model = YOLO(mid, 'detect')
-            # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
-            # Allows users to select between CPU, a specific GPU, or other compute devices
-            # for model execution.
-            results = model(frame,
+            if idx % 60 == 0:
+                # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
+                # Allows users to select between CPU, a specific GPU, or other compute devices
+                # for model execution.
+                results = model(frame,
                             conf=0.35,
                             device=Config.DEVICE)
 
-            # Visualize the results on the frame
-            annotated_frame = results[0].plot()
+                # Visualize the results on the frame
+                frame = results[0].plot()
+                idx = 0
+            else:
+                idx += 1
 
             # Convert frame to JPEG format
-            ret, buffer = cv2.imencode('.jpg', annotated_frame)
+            ret, buffer = cv2.imencode('.jpg', frame)
             frame_bytes = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
@@ -118,26 +124,30 @@ def webcam_feed(model_id: str = None):
     # Function to generate videos frames
     def generate_frames(mid):
         camera = cv2.VideoCapture(0)  # Use 0 for default webcam
+        idx = 0
         while True:
             success, frame = camera.read()
+            mid = Config.MODELS['yolov8n'] if mid is None else mid
+            model = YOLO(mid, 'detect')
             if not success:
                 break
             else:
                 # Run YOLOv8 inference on the frame
-                mid = Config.MODELS['yolov8n'] if mid is None else mid
-                model = YOLO(mid, 'detect')
-
-                # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
-                # Allows users to select between CPU, a specific GPU, or other compute devices
-                # for model execution.
-                results = model(frame,
+                if idx % 60 == 0:
+                    # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
+                    # Allows users to select between CPU, a specific GPU, or other compute devices
+                    # for model execution.
+                    results = model(frame,
                                 conf=0.45,
                                 device=Config.DEVICE)
 
-                # Visualize the results on the frame
-                annotated_frame = results[0].plot()
+                    # Visualize the results on the frame
+                    frame = results[0].plot()
+                    idx = 0
+                else:
+                    idx += 1
 
-                ret, buffer = cv2.imencode('.jpg', annotated_frame)
+                ret, buffer = cv2.imencode('.jpg', frame)
                 frame = buffer.tobytes()
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
