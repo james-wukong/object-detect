@@ -15,22 +15,18 @@ There are three main paths for our services:
  
 ## Developers
 
-after git clone to your local environment, you need to edit `yolo-data-conf.yaml` file, and chane the path to your local absolute path to your data folder
+1. after git clone to your local environment, you need to edit `yolo-data-conf.yaml` file, and chane the path to your local absolute path to your data folder
+1. test functionalities, mainly web services
 
-## How to use (NOT READY YET)
+## How to use
 
-1. install docker in your system
-2. enter root directory of this project:
-3. run following command in your terminal :
+install requirements.txt
 
 ```sh
-# linux -> linux/amd64, mac m1/m2 -> linux/arm64
-docker buildx build --platform linux/arm64 -t object_detect .
-
-docker run -d --name object_detect -p 8080:8080 object_detect
-# docker run -d --name object_detect -p 8080:8080 -v ~/Documents/Docker-Volumns/object-detect:/app  object_detect
-
-docker exec -it object_detect /bin/bash
-
-uvincorn main:app --reload
+pip install -r requirementst.txt
+cd project-root-path
+# or you can also use export FLASK_APP=app, then flask run
+flask --app app run --debug
 ```
+
+navigate to 127.0.0.1:5000, to visit the web service.
