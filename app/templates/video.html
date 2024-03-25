@@ -3,6 +3,11 @@
 {% block content %}
     <div class="content">
         <h2>Video Streaming</h2>
+        <select id="video_id" name="video_id">
+            {% for video, path in videos.items() %}
+            <option value="{{path}}">{{video}}</option>
+            {% endfor %}
+        </select>
         <select id="model_dl" name="model_dl"  onchange="handleChange()">
             {% for model, path in models.items() %}
             <option value="{{path}}">{{model}}</option>
@@ -15,11 +20,13 @@
         // Function to handle onchange event
         function handleChange() {
             // Get the selected value from the dropdown
-            var selectedValue = document.getElementById("model_dl").value;
+            var modelValue = document.getElementById("model_dl").value;
+            var videoValue = document.getElementById("video_id").value;
 
-            model_id = selectedValue.split('/').join('-');
+            model_id = modelValue.split('/').join('-');
+            video_id = videoValue.split('/').join('-');
             var videoPlayer = document.getElementById('videoPlayer');
-            videoPlayer.src = "{{ url_for('main.video_feed') }}/" + model_id + '?' + new Date().getTime();
+            videoPlayer.src = "{{ url_for('main.video_feed') }}/" + model_id + '/' + video_id + '?' + new Date().getTime();
         }
     </script>
 {% endblock %}

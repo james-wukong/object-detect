@@ -29,6 +29,8 @@ class Config:
               'yolov8m': os.path.join(MODEL_BASE_PATH, 'j/yolov8m/weights/best.pt'),
               'yolov8m_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8m_agmt/weights/best.pt'),
               }
-    VIDEO_DEMO = 'app/static/videos/demo.mp4'
+    VIDEO_DEMOS = {'Recorded Video': 'app/static/videos/demo1.mp4',
+                   'Realtime Video': 'app/static/videos/demo.mp4',}
 
+    SD_MODEL_ID = 'stabilityai/stable-diffusion-xl-base-1.0'
     ENDPOINT = 'https://api-inference.huggingface.co/models/'

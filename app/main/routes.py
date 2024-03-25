@@ -1,4 +1,5 @@
 import os
+import time
 
 from flask import render_template, request, flash, stream_with_context
 from flask import Response
@@ -33,7 +34,7 @@ def index():
             # model id: runwayml/stable-diffusion-v1-5
             gen_image = ModelA.generate_image_api(content,
                                               api_endpoint=Config.ENDPOINT,
-                                              model_id='runwayml/stable-diffusion-v1-5',
+                                              model_id=Config.SD_MODEL_ID,
                                               img_path=f'{Config.IMAGE_BASE_PATH}/gen/')
             # gen_image = 'app/static/images/gen/1.jpeg'
             yolo = YOLO(os.path.join(model), 'detect')
@@ -58,15 +59,16 @@ def index():
 
 @bp.route('/video', methods=['GET'])
 def video():
-    if request.method == 'POST':
-        model = request.form.get('model')
-    return render_template('video.html', models=Config.MODELS)
+    return render_template('video.html',
+                           models=Config.MODELS, 
+                           videos=Config.VIDEO_DEMOS)
 
 
 @bp.route('/video_feed', methods=['GET'])
-@bp.route('/video_feed/<model_id>', methods=['GET'])
-def video_feed(model_id: str = None):
-    video_path = Config.VIDEO_DEMO
+@bp.route('/video_feed/<model_id>/<video_id>', methods=['GET'])
+def video_feed(model_id=None, video_id=None):
+    video_path = video_id if video_id else Config.VIDEO_DEMOS['Recorded Video']
+    video_path = '/'.join(video_path.split('-'))
     cap = cv2.VideoCapture(video_path)
     model_id = '/'.join(model_id.split('-')) if model_id else None
 
@@ -82,16 +84,19 @@ def video_feed(model_id: str = None):
             if not ret:
                 break
             if idx % 60 == 0:
-                # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
-                # Allows users to select between CPU, a specific GPU, or other compute devices
-                # for model execution.
-                results = model(frame,
-                            conf=0.35,
-                            device=Config.DEVICE)
+                if video_path != Config.VIDEO_DEMOS['Recorded Video']:
+                    # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
+                    # Allows users to select between CPU, a specific GPU, or other compute devices
+                    # for model execution.
+                    results = model(frame,
+                                conf=0.35,
+                                device=Config.DEVICE)
 
-                # Visualize the results on the frame
-                frame = results[0].plot()
-                idx = 0
+                    # Visualize the results on the frame
+                    frame = results[0].plot()
+                    idx = 0
+                else:
+                    time.sleep(0.06)
             else:
                 idx += 1
 
@@ -118,7 +123,7 @@ def webcam():
 
 @bp.route('/webcam_feed', methods=['GET'])
 @bp.route('/webcam_feed/<model_id>', methods=['GET'])
-def webcam_feed(model_id: str = None):
+def webcam_feed(model_id=None):
     model_id = '/'.join(model_id.split('-')) if model_id else None
 
     # Function to generate videos frames
