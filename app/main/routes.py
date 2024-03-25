@@ -89,7 +89,7 @@ def video_feed(model_id=None, video_id=None):
                     # Allows users to select between CPU, a specific GPU, or other compute devices
                     # for model execution.
                     results = model(frame,
-                                conf=0.35,
+                                conf=Config.VIDEO_CONF,
                                 device=Config.DEVICE)
 
                     # Visualize the results on the frame
@@ -143,7 +143,7 @@ def webcam_feed(model_id=None):
                     # Allows users to select between CPU, a specific GPU, or other compute devices
                     # for model execution.
                     results = model(frame,
-                                conf=0.45,
+                                conf=Config.WEBCAM_CONF,
                                 device=Config.DEVICE)
 
                     # Visualize the results on the frame

@@ -12,6 +12,8 @@ class Config:
     DEVICE = 'cpu'
     # 'cpu', 'cuda'
     SD_DEVICE = 'cpu'
+    VIDEO_CONF = 0.35
+    WEBCAM_CONF = 0.45
 
     BASE_PATH = basedir
     UPLOAD_PATH = os.path.join(basedir, 'uploads')
