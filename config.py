@@ -28,6 +28,7 @@ class Config:
               'yolov8s_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8s_agmt/weights/best.pt'),
               'yolov8m': os.path.join(MODEL_BASE_PATH, 'j/yolov8m/weights/best.pt'),
               'yolov8m_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8m_agmt/weights/best.pt'),
+              'yolov8x': os.path.join(MODEL_BASE_PATH, 'd/yolov8x_hat_glass_1/weights/best.pt'),
               }
     VIDEO_DEMOS = {'Recorded Video': 'app/static/videos/demo1.mp4',
                    'Realtime Video': 'app/static/videos/demo.mp4',}
