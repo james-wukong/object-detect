@@ -30,12 +30,12 @@
     {% endif %}
     {% if gen_image %}
     <div class="content">
-        <img src="{{ url_for('static', filename='images/gen/' + gen_image) }}" alt="Generated Image">
+        <img src="{{ url_for('static', filename='images/gen/' + gen_image) }}" alt="Generated Image" width="80%">
     </div>
     {% endif %}
     {% if pred_image %}
     <div class="content">
-        <img src="{{ url_for('static', filename='images/pred/' + pred_image) }}" alt="Predicted Image">
+        <img src="{{ url_for('static', filename='images/pred/' + pred_image) }}" alt="Predicted Image" width="80%">
     </div>
     {% endif %}
 {% endblock %}
