@@ -38,6 +38,7 @@ def index():
                                               img_path=f'{Config.IMAGE_BASE_PATH}/gen/')
             # gen_image = 'app/static/images/gen/1.jpeg'
             yolo = YOLO(os.path.join(model), 'detect')
+            model_name = model.split('/')[-3]
 
             # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
             # Allows users to select between CPU, a specific GPU, or other compute devices
@@ -45,6 +46,7 @@ def index():
             results, dst_img = ModelA.predict(yolo,
                                               img=gen_image,
                                               conf=0.45,
+                                              model_name=model_name,
                                               device=Config.DEVICE)
 
             return render_template("index.html",
@@ -67,13 +69,21 @@ def video():
 @bp.route('/video_feed', methods=['GET'])
 @bp.route('/video_feed/<model_id>/<video_id>', methods=['GET'])
 def video_feed(model_id=None, video_id=None):
+    model_name = model_id.split('-')[-3] if model_id else 'yolov8n'
     video_path = video_id if video_id else Config.VIDEO_DEMOS['Recorded Video']
     video_path = '/'.join(video_path.split('-'))
     cap = cv2.VideoCapture(video_path)
     model_id = '/'.join(model_id.split('-')) if model_id else None
+    frame_width, frame_height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    frame_fps = int(cap.get(cv2.CAP_PROP_FPS))
+    out = cv2.VideoWriter(os.path.join(Config.BASE_PATH, f'app/static/videos/output/{model_name}_{round(time.time())}.avi'),
+                          cv2.VideoWriter_fourcc('M','J','P','G'), 
+                          frame_fps, 
+                          (frame_width,frame_height))
+
 
     # Function to generate videos frames
-    def generate_frames(mid):
+    def generate_frames(mid, out):
         idx = 0
         # Run YOLOv8 inference on the frame
         mid = Config.MODELS['yolov8n'] if mid is None else mid
@@ -83,7 +93,7 @@ def video_feed(model_id=None, video_id=None):
             ret, frame = cap.read()
             if not ret:
                 break
-            if idx % 60 == 0:
+            if idx % 30 == 0:
                 if video_path != Config.VIDEO_DEMOS['Recorded Video']:
                     # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
                     # Allows users to select between CPU, a specific GPU, or other compute devices
@@ -100,6 +110,7 @@ def video_feed(model_id=None, video_id=None):
             else:
                 idx += 1
 
+            out.write(frame)
             # Convert frame to JPEG format
             ret, buffer = cv2.imencode('.jpg', frame)
             frame_bytes = buffer.tobytes()
@@ -108,9 +119,10 @@ def video_feed(model_id=None, video_id=None):
 
         # Release capture device
         cap.release()
+        out.release()
 
     # Return Response object with the generated frames
-    return Response(stream_with_context(generate_frames(model_id)),
+    return Response(stream_with_context(generate_frames(model_id, out=out)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
@@ -124,11 +136,18 @@ def webcam():
 @bp.route('/webcam_feed', methods=['GET'])
 @bp.route('/webcam_feed/<model_id>', methods=['GET'])
 def webcam_feed(model_id=None):
+    model_name = model_id.split('-')[-3] if model_id else 'yolov8n'
     model_id = '/'.join(model_id.split('-')) if model_id else None
+    camera = cv2.VideoCapture(0)  # Use 0 for default webcam
+    frame_width, frame_height = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH)), int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    frame_fps = int(camera.get(cv2.CAP_PROP_FPS))
+    out = cv2.VideoWriter(os.path.join(Config.BASE_PATH, f'app/static/videos/webcam/{model_name}_{round(time.time())}.avi'),
+                          cv2.VideoWriter_fourcc('M','J','P','G'), 
+                          frame_fps, 
+                          (frame_width,frame_height))
 
     # Function to generate videos frames
     def generate_frames(mid):
-        camera = cv2.VideoCapture(0)  # Use 0 for default webcam
         idx = 0
         while True:
             success, frame = camera.read()
@@ -138,7 +157,7 @@ def webcam_feed(model_id=None):
                 break
             else:
                 # Run YOLOv8 inference on the frame
-                if idx % 60 == 0:
+                if idx % 30 == 0:
                     # Specifies the device for inference (e.g., cpu, cuda:0 or 0).
                     # Allows users to select between CPU, a specific GPU, or other compute devices
                     # for model execution.
@@ -152,12 +171,14 @@ def webcam_feed(model_id=None):
                 else:
                     idx += 1
 
+                out.write(frame)
                 ret, buffer = cv2.imencode('.jpg', frame)
                 frame = buffer.tobytes()
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         # Release capture device
         camera.release()
+        out.release()
 
     # Return Response object with the generated frames
     return Response(generate_frames(model_id),

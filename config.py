@@ -12,8 +12,8 @@ class Config:
     DEVICE = 'cpu'
     # 'cpu', 'cuda'
     SD_DEVICE = 'cpu'
-    VIDEO_CONF = 0.35
-    WEBCAM_CONF = 0.45
+    VIDEO_CONF = 0.3
+    WEBCAM_CONF = 0.4
 
     BASE_PATH = basedir
     UPLOAD_PATH = os.path.join(basedir, 'uploads')
@@ -24,7 +24,9 @@ class Config:
                                    'my_trained_models')
     IMAGE_BASE_PATH = os.path.join(os.getcwd(),
                                    'app', 'static', 'images')
-    MODELS = {'yolov8n': os.path.join(MODEL_BASE_PATH, 'j/yolov8n/weights/best.pt'),
+    MODELS = {
+              'yolov8n_nano': os.path.join(MODEL_BASE_PATH, 'h/yolov8n/weights/HatGlassModel.pt'),
+                'yolov8n': os.path.join(MODEL_BASE_PATH, 'j/yolov8n/weights/best.pt'),
               'yolov8n_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8n_agmt/weights/best.pt'),
               'yolov8s': os.path.join(MODEL_BASE_PATH, 'j/yolov8s/weights/best.pt'),
               'yolov8s_agmt': os.path.join(MODEL_BASE_PATH, 'j/yolov8s_agmt/weights/best.pt'),

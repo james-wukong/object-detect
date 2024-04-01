@@ -22,11 +22,28 @@ There are three main paths for our services:
 
 install requirements.txt
 
+check the config.py and modify accordingly
+
+create a new .ipynb file by copying sample-finetune.ipynb
+
+change parameters on top of the file accordingly to achieve a better training result
+
+To start the webservice:
+
+
 ```sh
 pip install -r requirementst.txt
 cd project-root-path
 # or you can also use export FLASK_APP=app, then flask run
-flask --app app run --debug
+flask --app app run --port 5000 --debug
 ```
 
 navigate to 127.0.0.1:5000, to visit the web service.
+
+## Samples
+
+original videos: /app/static/videos/{demo.mp4, demo1.mp4}
+
+sample output videos under directory: /app/static/videos/{output, webcam}
+
+sample image under direcctory: /app/static/images/{gen, pred}

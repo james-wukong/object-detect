@@ -102,7 +102,8 @@ class ModelA(YoloModelInterface):
 
     @staticmethod
     def predict(model: YOLO, img: Any, conf: float = 0.65,
-                device: str = 'cpu') -> tuple[List, str]:
+                device: str = 'cpu',
+                model_name: str = 'yolov8n') -> tuple[List, str]:
         # Run inference on 'bus.jpg' with arguments
         results = model(source=img,
                        save=False,
@@ -113,6 +114,7 @@ class ModelA(YoloModelInterface):
         else:
             dst_img = img.split('/')
         dst_img[-2] = 'pred'
+        dst_img[-1] = f"{model_name}_{dst_img[-1]}"
         dst_img = '/'.join(dst_img)
         for r in results:
             r.save(filename=dst_img)
